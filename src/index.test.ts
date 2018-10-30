@@ -24,7 +24,8 @@ it("simple overload", done => {
   closeSync(openSync(join(pkg, 'foo'), 'w'));
 });
 
-it("options overload", done => {
+// recursive is not supported on linux
+it.skip("options overload (recursive)", done => {
   const subfolder = join(pkg, 'subfolder');
   mkdirp.sync(subfolder);
 
@@ -41,6 +42,21 @@ it("options overload", done => {
   subscription.add(() => done());
   closeSync(openSync(join(subfolder, 'bar'), 'w'));
 });
+
+it("options overload (encoding)", done => {
+  const observable = watchObservable(pkg, { encoding: "utf8" });
+
+  const subscription = observable.subscribe(
+    ([ eventType, filename ]) => {
+      expect(eventType).toBe('rename');
+      expect(filename).toBe('foo');
+      subscription.unsubscribe();
+    }
+  );
+
+  subscription.add(() => done());
+  closeSync(openSync(join(pkg, 'foo'), 'w'));
+})
 
 it("buffer overload", done => {
   const observable = watchObservable(pkg, "buffer");
