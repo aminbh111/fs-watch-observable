@@ -46,30 +46,5 @@
     "Observable",
     "fs",
     "file system"
-  ],
-  "release": {
-    "verifyConditions": [
-      "@semantic-release/changelog",
-      "@semantic-release/npm",
-      "@semantic-release/git",
-      {
-        "path": "@semantic-release/gitlab",
-        "gitlabUrl": "https://gitgud.io"
-      }
-    ],
-    "prepare": [
-      "@semantic-release/changelog",
-      "@semantic-release/npm",
-      "@semantic-release/git"
-    ],
-    "publish": [
-      "@semantic-release/npm",
-      {
-        "path": "@semantic-release/gitlab",
-        "gitlabUrl": "https://gitgud.io"
-      }
-    ],
-    "success": false,
-    "fail": false
-  }
+  ]
 }

@@ -6,6 +6,8 @@ variables:
 before_script:
   - npm config set cache $CI_PROJECT_DIR/.npm
   - npm ci
+  - node -v
+  - npm -v
 
 cache:
   paths:
@@ -21,11 +23,3 @@ test:
   script:
     - npm i --no-save rxjs
     - npm test -- --coverage
-
-publish:
-  stage: release
-  except:
-    - tags
-  script:
-    - npm install -g semantic-release @semantic-release/changelog @semantic-release/git @semantic-release/gitlab
-    - npx semantic-release
