@@ -16,10 +16,11 @@ function watchObservable(filename: PathLike): Observable<[string, string]>
  * If `encoding` is not supplied, the default of `'utf8'` is used.
  * If `persistent` is not supplied, the default of `true` is used.
  * If `recursive` is not supplied, the default of `false` is used.
+ * If `signal` is not supplied, the default of `undefined` is used.
  */
 function watchObservable(
   filename: PathLike,
-  options: { encoding?: BufferEncoding | null, persistent?: boolean, recursive?: boolean } | BufferEncoding | undefined | null,
+  options: { encoding?: BufferEncoding | null, persistent?: boolean, recursive?: boolean, signal?: AbortSignal } | BufferEncoding | undefined | null,
 ): Observable<[string, string]>
 
 /**
@@ -30,10 +31,11 @@ function watchObservable(
  * If `encoding` is not supplied, the default of `'utf8'` is used.
  * If `persistent` is not supplied, the default of `true` is used.
  * If `recursive` is not supplied, the default of `false` is used.
+ * If `signal` is not supplied, the default of `undefined` is used.
  */
 function watchObservable(
   filename: PathLike,
-  options: { encoding: "buffer", persistent?: boolean, recursive?: boolean } | "buffer"
+  options: { encoding: "buffer", persistent?: boolean, recursive?: boolean, signal?: AbortSignal } | "buffer"
 ): Observable<[string, Buffer]>
 
 /**
@@ -44,10 +46,11 @@ function watchObservable(
  * If `encoding` is not supplied, the default of `'utf8'` is used.
  * If `persistent` is not supplied, the default of `true` is used.
  * If `recursive` is not supplied, the default of `false` is used.
+ * If `signal` is not supplied, the default of `undefined` is used.
  */
 function watchObservable(
   filename: PathLike,
-  options?: { encoding?: string | null, persistent?: boolean, recursive?: boolean } | string | null
+  options?: { encoding?: string | null, persistent?: boolean, recursive?: boolean, signal?: AbortSignal } | string | null
 ): Observable<[string, string | Buffer]> {
 
   return new Observable(subscriber => {
@@ -62,6 +65,12 @@ function watchObservable(
     watcher.on("close", () => {
       subscriber.complete();
     });
+
+    if (typeof options === "object") {
+      options?.signal?.addEventListener("abort", () => {
+        watcher.close();
+      });
+    }
 
     return function unsubscribe() {
       watcher.close();
