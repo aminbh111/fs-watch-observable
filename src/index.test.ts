@@ -72,3 +72,29 @@ it("buffer overload", done => {
   subscription.add(() => done());
   closeSync(openSync(join(pkg, 'foo'), 'w'));
 });
+
+it("abortsignal", done => {
+  const abort = new AbortController();
+  const observable = watchObservable(pkg, { signal: abort.signal });
+
+  let eventCount = 0;
+
+  const subscription = observable.subscribe(
+    () => {
+      eventCount++;
+    }
+  );
+
+  subscription.add(() => {
+    expect(eventCount).toBe(2);
+    done();
+  });
+
+  closeSync(openSync(join(pkg, 'foo'), 'w'));
+  closeSync(openSync(join(pkg, 'foo'), 'w'));
+  setTimeout(() => {
+    abort.abort();
+    closeSync(openSync(join(pkg, 'foo'), 'w'));
+    closeSync(openSync(join(pkg, 'foo'), 'w'));
+  }, 50);
+});

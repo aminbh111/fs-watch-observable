@@ -69,7 +69,7 @@ function watchObservable(
     if (typeof options === "object") {
       options?.signal?.addEventListener("abort", () => {
         watcher.close();
-      });
+      }, { once: true });
     }
 
     return function unsubscribe() {
