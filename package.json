@@ -1,6 +1,6 @@
 {
   "name": "fs-watch-observable",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "fs.Watch but it returns a RxJS observable",
   "homepage": "https://gitgud.io/nixx/fs-watch-observable",
   "bugs": {
